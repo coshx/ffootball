@@ -1,0 +1,29 @@
+.standard-rules {
+  border: 1px solid black;
+  background: #D3D3D3;
+}
+
+.subtitle {
+  color: green;
+  font-weight: bold;
+}
+
+.score {
+  text-align: right;
+}
+
+.table-title {
+  text-align: center
+}
+
+.dropdown {
+  display: inline;
+}
+
+.custom-rules {
+  border: 1px solid black;
+}
+
+.form-group label {
+  text-align: left !important;
+}
