@@ -43,7 +43,7 @@ def score_players(scoring_config, year, position):
             scores[players[p]] += int(pp.fumbles_rec_tds) * int(scoring_config['miscellaneous']['fr-td'])
             scores[players[p]] += int(pp.kickret_tds) * int(scoring_config['miscellaneous']['kickoff-td'])
             scores[players[p]] += int(pp.fumbles_lost) * int(scoring_config['miscellaneous']['fumble'])
-            scores[players[p]] += int(pp.puntret_td) * int(scoring_config['miscellaneous']['punt-td'])
+            scores[players[p]] += int(pp.puntret_tds) * int(scoring_config['miscellaneous']['punt-td'])
 
 
     return scores
