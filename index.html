@@ -15,41 +15,61 @@
 <body>
 
 <script type="text/javascript">
-  function logForm() {
-    var rules = {}
-    console.log('Printing each form group:');
-    $('.form-group').each(function() {
-      console.log($( this ).html());
-    });
-
-    console.log('Printing each form label:')
-    $('label').each(function( index ) {
-      console.log(index + ": " + $( this ).attr('for') );
-    });
-
-    console.log('Printing each option in the form:')
-    $('option').each(function() {
-      console.log($( this ));
-    })
-  }
-
   $(document).ready(function () {
-  $("input#submit").click(function(){
-    $.ajax({
-      type: "POST",
-        url: "http://localhost:8000",
-        data: {'25PY': 25}.serialize(),
-        // data: $('form.custom-rules').serialize(),
-        success: function(msg){
-          $("#thanks").html(msg) //hide button and show thank you
-          $("#form-content").modal('hide'); //hide popup
-          },
-        error: function(){
-          alert("failure");
-        }
+    var subtitleHash = function(subtitle){
+      var group = "." + subtitle + " .form-group";
+      var items = $(group);
+      var subHash = {};
+      console.log(items.length);
+      for(var i=0; i<items.length;i++){
+        var key = $(items[i]).children().attr("for");
+        var value = $(items[i]).children().children().val();
+        subHash[key] = value;
+      }
+      var hash = {}
+      hash[subtitle] = subHash;
+      return hash;
+    };
+
+    var customSettings = function(){
+      var settings = [subtitleHash("passing"), subtitleHash("rushing"), subtitleHash("receiving"), subtitleHash("miscellaneous"), subtitleHash("kicking")];
+      return settings;
+    }
+
+    // function logForm() {
+    //   var rules = {}
+    //   console.log('Printing each form group:');
+    //   $('.form-group').each(function() {
+    //     console.log($( this ).html());
+    //   });
+
+    //   console.log('Printing each form label:')
+    //   $('label').each(function( index ) {
+    //     console.log(index + ": " + $( this ).attr('for') );
+    //   });
+
+    //   console.log('Printing each option in the form:')
+    //   $('option').each(function() {
+    //     console.log($( this ));
+    //   })
+    // }
+
+    var customRules = customSettings();
+    $("input#submit").click(function(){
+      $.ajax({
+          type: "POST",
+          url: "http://localhost:8000",
+          data: {rules: JSON.stringify(customRules), kind: "pub"},
+          success: function(msg){
+            $("#thanks").html(msg) //hide button and show thank you
+            $("#form-content").modal('hide'); //hide popup
+            },
+          error: function(){
+            alert("failure");
+          }
+      });
     });
   });
-});
 </script>
 
 <input type="button" value="Log Form Values" onclick="return logForm();">
@@ -58,247 +78,257 @@
     <div class="col-md-7 custom-rules custom-rules">
       <h3 class="table-title">Custom League Rules</h3>
       <form class="form-horizontal custom-rules">
-        <h4 class="subtitle">Passing</h4>
-        <div class="form-group">
-          <label for="25PY" class="col-md-7 control-label">
-            1pt for every
-            <select class="dropdown" id="25PY">
-              <option>10</option>
-              <option>15</option>
-              <option>20</option>
-              <option>25</option>
-              <option>30</option>
-              <option>35</option>
-            </select>
-            passing yards
-          </label>
+        <div class="passing">
+          <h4 class="subtitle">Passing</h4>
+          <div class="form-group">
+            <label for="25PY" class="col-md-7 control-label">
+              1pt for every
+              <select class="dropdown" id="25PY">
+                <option>10</option>
+                <option>15</option>
+                <option>20</option>
+                <option selected>25</option>
+                <option>30</option>
+                <option>35</option>
+              </select>
+              passing yards
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="TD-pass" class="col-md-7 control-label">
+              <select class="dropdown" id="TD-Pass">
+                <option>3</option>
+                <option selected>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+              </select>
+              points for every TD pass
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="interception-thrown" class="col-md-7 control-label">
+              <select class="dropdown" id="interception-thrown">
+                <option>-1</option>
+                <option selected>-2</option>
+                <option>-3</option>
+                <option>-4</option>
+                <option>-5</option>
+              </select>
+              point(s) for every interception thrown
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="2pt-thrown" class="col-md-7 control-label">
+              <select class="dropdown" id="2pt-thrown">
+                <option>1</option>
+                <option selected>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+              point(s) for every 2pt conversion thrown
+            </label>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="TD-pass" class="col-md-7 control-label">
-            <select class="dropdown" id="TD-Pass">
-              <option>3</option>
-              <option selected>4</option>
-              <option>5</option>
-              <option>6</option>
-              <option>7</option>
-            </select>
-            points for every TD pass
-          </label>
+        <div class="rushing">
+          <h4 class="subtitle">Rushing</h4>
+          <div class="form-group">
+            <label for="10RY" class="col-md-7 control-label">
+              1pt for every
+              <select class="dropdown" id="10RY">
+                <option selected>10</option>
+                <option>15</option>
+                <option>20</option>
+                <option>25</option>
+                <option>30</option>
+                <option>35</option>
+              </select>
+              rushing yards
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="TD-rush" class="col-md-7 control-label">
+              <select class="dropdown" id="TD-rush">
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option selected>6</option>
+                <option>7</option>
+              </select>
+              points for every rushing TD
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="2pt-rush" class="col-md-7 control-label">
+              <select class="dropdown" id="2pt-rush">
+                <option>1</option>
+                <option selected>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+              point(s) for every 2pt conversion by RB
+            </label>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="interception-thrown" class="col-md-7 control-label">
-            <select class="dropdown" id="interception-thrown">
-              <option>-1</option>
-              <option selected>-2</option>
-              <option>-3</option>
-              <option>-4</option>
-              <option>-5</option>
-            </select>
-            point(s) for every interception thrown
-          </label>
+        <div class="receiving">
+          <h4 class="subtitle">Receiving</h4>
+          <div class="form-group">
+            <label for="10RecY" class="col-md-7 control-label">
+              1pt for every
+              <select class="dropdown" id="10RecY">
+                <option selected>10</option>
+                <option>15</option>
+                <option>20</option>
+                <option>25</option>
+                <option>30</option>
+                <option>35</option>
+              </select>
+              receiving yards
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="TD-rush" class="col-md-7 control-label">
+              <select class="dropdown" id="TD-rush">
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option selected>6</option>
+                <option>7</option>
+              </select>
+              points for every receiving TD
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="2pt-rush" class="col-md-7 control-label">
+              <select class="dropdown" id="2pt-rush">
+                <option>1</option>
+                <option selected>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+              point(s) for every 2pt conversion by WR
+            </label>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="2pt-thrown" class="col-md-7 control-label">
-            <select class="dropdown" id="2pt-thrown">
-              <option>1</option>
-              <option selected>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-            </select>
-            point(s) for every 2pt conversion thrown
-          </label>
+        <div class="miscellaneous">
+          <h4 class="subtitle">Miscellaneous</h4>
+          <div class="form-group">
+            <label for="kickoff-td" class="col-md-7 control-label">
+              <select class="dropdown" id="kickoff-td">
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option selected>6</option>
+                <option>7</option>
+                <option>8</option>
+              </select>
+              points for a kick off returned for TD
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="punt-td" class="col-md-7 control-label">
+              <select class="dropdown" id="punt-td">
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option selected>6</option>
+                <option>7</option>
+                <option>8</option>
+              </select>
+              points for a punt returned for TD
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="fr-td" class="col-md-7 control-label">
+              <select class="dropdown" id="fr-td">
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option selected>6</option>
+                <option>7</option>
+                <option>8</option>
+              </select>
+              points for a fumble recovered for TD
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="fumble" class="col-md-7 control-label">
+              <select class="dropdown" id="fumble">
+                <option>-1</option>
+                <option selected>-2</option>
+                <option>-3</option>
+                <option>-4</option>
+                <option>-5</option>
+              </select>
+              point(s) for every fumble lost
+            </label>
+          </div>
         </div>
-        <h4 class="subtitle">Rushing</h4>
-        <div class="form-group">
-          <label for="10RY" class="col-md-7 control-label">
-            1pt for every
-            <select class="dropdown" id="10RY">
-              <option selected>10</option>
-              <option>15</option>
-              <option>20</option>
-              <option>25</option>
-              <option>30</option>
-              <option>35</option>
-            </select>
-            rushing yards
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="TD-rush" class="col-md-7 control-label">
-            <select class="dropdown" id="TD-rush">
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-              <option selected>6</option>
-              <option>7</option>
-            </select>
-            points for every rushing TD
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="2pt-rush" class="col-md-7 control-label">
-            <select class="dropdown" id="2pt-rush">
-              <option>1</option>
-              <option selected>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-            </select>
-            point(s) for every 2pt conversion by RB
-          </label>
-        </div>
-        <h4 class="subtitle">Receiving</h4>
-        <div class="form-group">
-          <label for="10RecY" class="col-md-7 control-label">
-            1pt for every
-            <select class="dropdown" id="10RecY">
-              <option selected>10</option>
-              <option>15</option>
-              <option>20</option>
-              <option>25</option>
-              <option>30</option>
-              <option>35</option>
-            </select>
-            receiving yards
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="TD-rush" class="col-md-7 control-label">
-            <select class="dropdown" id="TD-rush">
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-              <option selected>6</option>
-              <option>7</option>
-            </select>
-            points for every receiving TD
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="2pt-rush" class="col-md-7 control-label">
-            <select class="dropdown" id="2pt-rush">
-              <option>1</option>
-              <option selected>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-            </select>
-            point(s) for every 2pt conversion by WR
-          </label>
-        </div>
-        <h4 class="subtitle">Miscellaneous</h4>
-        <div class="form-group">
-          <label for="kickoff-td" class="col-md-7 control-label">
-            <select class="dropdown" id="kickoff-td">
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-              <option selected>6</option>
-              <option>7</option>
-              <option>8</option>
-            </select>
-            points for a kick off returned for TD
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="punt-td" class="col-md-7 control-label">
-            <select class="dropdown" id="punt-td">
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-              <option selected>6</option>
-              <option>7</option>
-              <option>8</option>
-            </select>
-            points for a punt returned for TD
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="fr-td" class="col-md-7 control-label">
-            <select class="dropdown" id="fr-td">
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-              <option selected>6</option>
-              <option>7</option>
-              <option>8</option>
-            </select>
-            points for a fumble recovered for TD
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="fumble" class="col-md-7 control-label">
-            <select class="dropdown" id="fumble">
-              <option>-1</option>
-              <option selected>-2</option>
-              <option>-3</option>
-              <option>-4</option>
-              <option>-5</option>
-            </select>
-            point(s) for every fumble lost
-          </label>
-        </div>
-        <h4 class="subtitle">Kicking</h4>
-        <div class="form-group">
-          <label for="made-PAT" class="col-md-7 control-label">
-            <select class="dropdown" id="made-PAT">
-              <option selected>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-            </select>
-            point(s) for every made PAT
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="made-PAT" class="col-md-7 control-label">
-            <select class="dropdown" id="made-PAT">
-              <option selected>-1</option>
-              <option>-2</option>
-              <option>-3</option>
-              <option>-4</option>
-              <option>-5</option>
-            </select>
-            point(s) for every missed FG/PAT
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="fg-39" class="col-md-7 control-label">
-            <select class="dropdown" id="fg-39">
-              <option>1</option>
-              <option>2</option>
-              <option selected>3</option>
-              <option>4</option>
-              <option>5</option>
-            </select>
-            point(s) for every made FG (0-39 yards)
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="fg-49" class="col-md-7 control-label">
-            <select class="dropdown" id="fg-49">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option selected>4</option>
-              <option>5</option>
-            </select>
-            point(s) for every made FG (40-49 yards)
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="fg-50" class="col-md-7 control-label">
-            <select class="dropdown" id="fg-50">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option selected>5</option>
-            </select>
-            point(s) for every made FG (40-49 yards)
-          </label>
+        <div class="kicking">
+          <h4 class="subtitle">Kicking</h4>
+          <div class="form-group">
+            <label for="made-PAT" class="col-md-7 control-label">
+              <select class="dropdown" id="made-PAT">
+                <option selected>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+              point(s) for every made PAT
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="made-PAT" class="col-md-7 control-label">
+              <select class="dropdown" id="made-PAT">
+                <option selected>-1</option>
+                <option>-2</option>
+                <option>-3</option>
+                <option>-4</option>
+                <option>-5</option>
+              </select>
+              point(s) for every missed FG/PAT
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="fg-39" class="col-md-7 control-label">
+              <select class="dropdown" id="fg-39">
+                <option>1</option>
+                <option>2</option>
+                <option selected>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+              point(s) for every made FG (0-39 yards)
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="fg-49" class="col-md-7 control-label">
+              <select class="dropdown" id="fg-49">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option selected>4</option>
+                <option>5</option>
+              </select>
+              point(s) for every made FG (40-49 yards)
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="fg-50" class="col-md-7 control-label">
+              <select class="dropdown" id="fg-50">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option selected>5</option>
+              </select>
+              point(s) for every made FG (40-49 yards)
+            </label>
+          </div>
         </div>
         <div class="form-group">
           <div class="col-md-7">
