@@ -47,7 +47,7 @@
     var defaultData = function() {
       $.ajax({
         type: "POST",
-          url: "http://localhost:8000",
+          url: "http://localhost:8000/onload",
           data: JSON.stringify(submitForm()),
           success: function(response) {
             console.log('Posting data succeeded.');
