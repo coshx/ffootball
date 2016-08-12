@@ -3,8 +3,8 @@ import json
 import tornado.ioloop
 import tornado.httpserver
 import tornado.web
+import querydb
 
-import nfldb
 # from optimizer.utils import get_data
 # from optimizer.optimize import optimize_portfolio
 
@@ -35,11 +35,9 @@ class MainHandler(tornado.web.RequestHandler):
     def post(self):
         """Respond to POST requests with optimal allocations."""
         data = json.loads(self.request.body.decode('utf-8'))
-        # Process data to make it usable
-        clean_data = dict_from_data(data)
-        # Call helper method, which will interact with the database
-        fantasy_scores = get_scores()
-        self.write(fantasy_scores)
+        print data
+        scores = querydb.score_passers(data)
+        self.write(scores)
         self.finish()
 
 
@@ -48,15 +46,6 @@ def make_app():
     return tornado.web.Application([
         (r"/", MainHandler)
     ])
-
-
-def get_scores(scoring_config):
-    """Gets fields from database and applies scoring."""
-    # TODO: Implement contact_database()
-    stats = contact_database()
-    # TODO: Implement scoring multiplication here
-    fantasy_scores = stats * scoring_config
-    return fantasy_scores
 
 
 def dict_from_data(data):
