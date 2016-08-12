@@ -36,7 +36,7 @@ class MainHandler(tornado.web.RequestHandler):
         """Respond to POST requests with optimal allocations."""
         data = json.loads(self.request.body.decode('utf-8'))
         print data
-        scores = querydb.score_passers(data)
+        scores = querydb.get_scores(data)
         self.write(scores)
         self.finish()
 
