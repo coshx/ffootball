@@ -1,36 +1,67 @@
 import nfldb
 
-def score_passers(scoring_config):
-    score = {'passing': {}}
-    passing_yds = get_passing_yards_for_single_season(2015)
-    for qb in passing_yds:
-        score['passing'][qb] = passing_yds[qb] / int(scoring_config['passing']['25PY'])
+from collections import defaultdict
+
+def get_scores(scoring_config):
+    score = {}
+    score['passing'] = score_players(scoring_config, 2015, 'QB')
+    score['rushing'] = score_players(scoring_config, 2015, 'RB')
+    score['receiving'] = score_players(scoring_config, 2015, 'WR')
+
     return score
 
-def get_top_players():
-    """Gets fields from database and applies scoring."""
-    passing_yds = get_passing_yards_for_single_season(2015)
-    passing_tds = get_passing_tds_for_single_season(2015)
+def score_players(scoring_config, year, position):
+    scores = defaultdict(int)
 
-    rushing_yds = get_rushing_yards_for_single_season(2015)
-    rushing_yds = get_rushing_tds_for_single_season(2015)
+    db = nfldb.connect()
+    players = get_players_by_position(position)
 
-    receiving_yds = get_receiving_yards_for_single_season(2015)
-    receiving_yds = get_receiving_tds_for_single_season(2015)
+    # Passing
+    for p in players:
+        q = nfldb.Query(db).game(season_year=year, season_type='Regular')
+        for pp in q.play_player(player_id=p).as_aggregate():
+            # Points from passing
+            scores[players[p]] += int(pp.passing_yds) / int(scoring_config['passing']['25PY'])
+            scores[players[p]] += int(pp.passing_tds) * int(scoring_config['passing']['TD-pass'])
+            scores[players[p]] += int(pp.passing_twoptm) * int(scoring_config['passing']['2pt-thrown'])
+            scores[players[p]] += int(pp.passing_int) * int(scoring_config['passing']['interception-thrown'])
+
+            # Points from rushing
+            scores[players[p]] += int(pp.rushing_yds) / int(scoring_config['rushing']['10RY'])
+            scores[players[p]] += int(pp.rushing_tds) * int(scoring_config['rushing']['TD-rush'])
+            scores[players[p]] += int(pp.rushing_twoptm) * int(scoring_config['rushing']['2pt-rush'])
+
+            # Points from receiving
+            scores[players[p]] = int(pp.receiving_yds) / int(scoring_config['receiving']['10RecY'])
+            scores[players[p]] += int(pp.receiving_tds) * int(scoring_config['receiving']['TD-rec'])
+            scores[players[p]] += int(pp.receiving_twoptm) * int(scoring_config['receiving']['2pt-rec'])
+
+            # Points from kicking
+            # scores[players[p]] += int(pp.kicking_xpmade) * int(scoring_config['kicking']['made-PAT'])
+
+            # Points from miscellaneous
+            scores[players[p]] += int(pp.fumbles_rec_tds) * int(scoring_config['miscellaneous']['fr-td'])
+            scores[players[p]] += int(pp.kickret_tds) * int(scoring_config['miscellaneous']['kickoff-td'])
+            scores[players[p]] += int(pp.fumbles_lost) * int(scoring_config['miscellaneous']['fumble'])
+            scores[players[p]] += int(pp.puntret_td) * int(scoring_config['miscellaneous']['punt-td'])
 
 
+    return scores
 
-    # TODO: Implement scoring multiplication here
-    return fantasy_scores
+def get_players_by_position(pos):
+    """Returns a dict of up to 200 players in a position.
 
-# def get_quarterbacks(year):
-#     db = nfldb.connect()
-#     q = nfldb.Query(db)
-#     qbs = {}
-#     q.game(season_year=year, season_type='Regular')
-#     for team in q.
-#     import pdb
-#     pdb.set_trace()
+    Dictionary format is {'player_id': 'full_name'}"""
+    positions = {'QB': 'passing_yds',
+                 'RB': 'rushing_yds',
+                 'WR': 'receiving_yds'}
+    db = nfldb.connect()
+    q = nfldb.Query(db)
+    players = {}
+    q.player(position=pos)
+    for pp in q.sort(positions[pos]).limit(200).as_aggregate():
+        players[pp.player.player_id] = pp.player.full_name
+    return players
 
 '''Passing stats...'''
 def get_passing_yards_for_single_season(year):
@@ -48,7 +79,7 @@ def get_passing_tds_for_single_season(year):
     qbs = {}
     q.game(season_year=year, season_type='Regular')
     for pp in q.sort('passing_tds').limit(100).as_aggregate():
-        qbs[pp.player.full_name] = int(pp.passing_yds)
+        qbs[pp.player.full_name] = int(pp.passing_tds)
     return qbs
 
 
