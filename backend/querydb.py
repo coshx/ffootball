@@ -1,4 +1,5 @@
 import nfldb
+import json
 
 from collections import defaultdict
 
@@ -7,6 +8,10 @@ def get_scores(scoring_config):
     score['passing'] = score_players(scoring_config, 2015, 'QB')
     score['rushing'] = score_players(scoring_config, 2015, 'RB')
     score['receiving'] = score_players(scoring_config, 2015, 'WR')
+    # score['kicking'] = score_players(scoring_config, 2015, 'K')
+
+    with open('scores.json', 'w') as fp:
+        json.dump(score, fp)
 
     return score
 
@@ -46,7 +51,6 @@ def score_players(scoring_config, year, position):
             scores[players[p]] += int(pp.kickret_tds) * int(scoring_config['miscellaneous']['kickoff-td'])
             scores[players[p]] += int(pp.fumbles_lost) * int(scoring_config['miscellaneous']['fumble'])
             scores[players[p]] += int(pp.puntret_tds) * int(scoring_config['miscellaneous']['punt-td'])
-
 
     return scores
 
