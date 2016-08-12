@@ -15,12 +15,11 @@
 <body>
 
 <script type="text/javascript">
-  $(document).ready(function () {
-    var subtitleHash = function(subtitle){
+  var submitForm = function() {
+    var subtitleHash = function(subtitle) {
       var group = "." + subtitle + " .form-group";
       var items = $(group);
       var subHash = {};
-      console.log(items.length);
       for(var i=0; i<items.length;i++){
         var key = $(items[i]).children().attr("for");
         var value = $(items[i]).children().children().val();
@@ -31,41 +30,28 @@
       return hash;
     };
 
-    var customSettings = function(){
+    var customSettings = function() {
       var settings = [subtitleHash("passing"), subtitleHash("rushing"), subtitleHash("receiving"), subtitleHash("miscellaneous"), subtitleHash("kicking")];
       return settings;
     }
 
-    // function logForm() {
-    //   var rules = {}
-    //   console.log('Printing each form group:');
-    //   $('.form-group').each(function() {
-    //     console.log($( this ).html());
-    //   });
-
-    //   console.log('Printing each form label:')
-    //   $('label').each(function( index ) {
-    //     console.log(index + ": " + $( this ).attr('for') );
-    //   });
-
-    //   console.log('Printing each option in the form:')
-    //   $('option').each(function() {
-    //     console.log($( this ));
-    //   })
-    // }
-
     var customRules = customSettings();
-    $("input#submit").click(function(){
+    return customRules;
+  }
+
+  $(document).ready(function() {
+    $("button").click(function(e) {
+      e.preventDefault();
       $.ajax({
-          type: "POST",
+        type: "POST",
           url: "http://localhost:8000",
-          data: {rules: JSON.stringify(customRules), kind: "pub"},
-          success: function(msg){
-            $("#thanks").html(msg) //hide button and show thank you
-            $("#form-content").modal('hide'); //hide popup
-            },
-          error: function(){
-            alert("failure");
+          data: JSON.stringify(submitForm()),
+          success: function(msg) {
+            console.log('Posting data succeeded.')
+          },
+          error: function() {
+            console.log('Posting data failed.')
+            console.log('submitForm() sent over', submitForm())
           }
       });
     });
