@@ -25,13 +25,15 @@
         var value = $(items[i]).children().children().val();
         subHash[key] = value;
       }
-      var hash = {}
-      hash[subtitle] = subHash;
-      return hash;
+      return subHash;
     };
 
     var customSettings = function() {
-      var settings = [subtitleHash("passing"), subtitleHash("rushing"), subtitleHash("receiving"), subtitleHash("miscellaneous"), subtitleHash("kicking")];
+      var settings = {}
+      var subtitles = ["passing", "rushing", "receiving", "miscellaneous", "kicking"]
+      for (var s in subtitles) {
+        settings[subtitles[s]] = subtitleHash(subtitles[s])
+      }
       return settings;
     }
 
@@ -46,9 +48,10 @@
         type: "POST",
           url: "http://localhost:8000",
           data: JSON.stringify(submitForm()),
-          success: function(msg) {
-            console.log('Posting data succeeded.')
-            console.log('submitForm() sent over', submitForm())
+          success: function(response) {
+            console.log('Posting data succeeded.');
+            console.log('submitForm() sent over', submitForm());
+            console.log(response);
           },
           error: function() {
             console.log('Posting data failed.')
