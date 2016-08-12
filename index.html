@@ -44,7 +44,8 @@
 
   $(document).ready(function() {
     //  fxn runs on page load to fetch std rules data
-    $.ajax({
+    var defaultData = function() {
+      $.ajax({
         type: "POST",
           url: "http://localhost:8000",
           data: JSON.stringify(submitForm()),
@@ -52,12 +53,59 @@
             console.log('Posting data succeeded.');
             console.log('submitForm() sent over', submitForm());
             player_data = response;
+            populatePassingTable(player_data);
           },
           error: function() {
             console.log('Posting data failed.')
             console.log('submitForm() sent over', submitForm())
           }
       });
+    };
+
+    defaultData();
+
+    var populatePassingTable = function(data) {
+      var qbs = data["passing"];
+      jQuery.each(qbs, function (name, value) {
+        $(".table-hover").append("<tr><td>" + value + "</td><td>" + name + "</td></tr>");
+      });
+    };
+
+    var populateRushingTable = function(data) {
+      var rbs = data["rushing"];
+      jQuery.each(rbs, function (name, value) {
+        $(".table-hover").append("<tr><td>" + value + "</td><td>" + name + "</td></tr>");
+      });
+    };
+
+    var populateRushingTable = function(data) {
+      var rbs = data["rushing"];
+      jQuery.each(rbs, function (name, value) {
+        $(".table-hover").append("<tr><td>" + value + "</td><td>" + name + "</td></tr>");
+      });
+    };
+
+    var populateReceivingTable = function(data) {
+      var wrs = data["receiving"];
+      jQuery.each(wrs, function (name, value) {
+        $(".table-hover").append("<tr><td>" + value + "</td><td>" + name + "</td></tr>");
+      });
+    };
+
+    $(".js-passing").click(function(){
+      $(".table-hover").children().children().next().remove();
+      populatePassingTable(player_data);
+    });
+
+    $(".js-rushing").click(function(){
+      $(".table-hover").children().children().next().remove();
+      populateRushingTable(player_data);
+    });
+
+    $(".js-receiving").click(function(){
+      $(".table-hover").children().children().next().remove();
+      populateReceivingTable(player_data);
+    })
 
     $(".submit").click(function(e) {
       e.preventDefault();
@@ -68,7 +116,7 @@
           success: function(response) {
             console.log('Posting data succeeded.');
             console.log('submitForm() sent over', submitForm());
-            console.log(response);
+            player_data = response;
           },
           error: function() {
             console.log('Posting data failed.')
@@ -383,10 +431,17 @@
       </div>
     </div>
     <hr class="header-sep">
-
+    <div class="functions-link">
+        <p class="js-passing">Passing</p>
+        <p class="js-rushing">Rushing</p>
+        <p class="js-receiving">Receiving</p>
+    </div>
     <!-- handle all of the returned player data below -->
     <table class="table table-hover">
       <tr>
+        <th>Rank</th>
+        <th>Player</th>
+      </tr>
     </table>
   </div>
   <div class="col-md-2 side"></div>

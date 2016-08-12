@@ -21,10 +21,6 @@
   display: inline;
 }
 
-/*.custom-rules {
-  border: 1px solid black;
-}*/
-
 .form-group label {
   text-align: left !important;
 }
@@ -171,4 +167,16 @@ h3 {
 .passing-yards-pt {
   display: inline;
   font-weight: bold;
+}
+
+.functions-link {
+  margin-bottom: 3%;
+}
+
+.functions-link p {
+  display: inline;
+  cursor: pointer;
+  margin-right: 5%;
+  color: #003A73;
+  font-size: 1.5em;
 }
