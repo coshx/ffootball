@@ -4,6 +4,7 @@ import tornado.ioloop
 import tornado.httpserver
 import tornado.web
 
+import nfldb
 # from optimizer.utils import get_data
 # from optimizer.optimize import optimize_portfolio
 
