@@ -32,7 +32,7 @@ def score_players(scoring_config, year, position):
             scores[players[p]] += int(pp.rushing_twoptm) * int(scoring_config['rushing']['2pt-rush'])
 
             # Points from receiving
-            scores[players[p]] = int(pp.receiving_yds) / int(scoring_config['receiving']['10RecY'])
+            scores[players[p]] += int(pp.receiving_yds) / int(scoring_config['receiving']['10RecY'])
             scores[players[p]] += int(pp.receiving_tds) * int(scoring_config['receiving']['TD-rec'])
             scores[players[p]] += int(pp.receiving_twoptm) * int(scoring_config['receiving']['2pt-rec'])
 
