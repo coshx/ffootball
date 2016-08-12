@@ -43,7 +43,7 @@
   }
 
   $(document).ready(function() {
-    $("button").click(function(e) {
+    $(".submit").click(function(e) {
       e.preventDefault();
       $.ajax({
         type: "POST",
@@ -216,9 +216,9 @@
                   </label>
                 </div>
                 <div class="form-group kicking-group">
-                  <label for="made-PAT" class="control-label">
+                  <label for="missed-PAT" class="control-label">
                     Each FG Missed
-                    <select class="dropdown" id="made-PAT">
+                    <select class="dropdown" id="missed-PAT">
                       <option selected>-1</option>
                       <option>-2</option>
                       <option>-3</option>
@@ -358,7 +358,7 @@
               </div>
               <div class="form-group">
                 <div class="col-md-7">
-                  <button type="submit" class="btn btn-default">Submit</button>
+                  <button type="submit" class="btn btn-default submit">Apply</button>
                 </div>
               </div>
             </form>
