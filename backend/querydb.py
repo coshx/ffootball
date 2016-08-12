@@ -37,7 +37,9 @@ def score_players(scoring_config, year, position):
             scores[players[p]] += int(pp.receiving_twoptm) * int(scoring_config['receiving']['2pt-rec'])
 
             # Points from kicking
-            # scores[players[p]] += int(pp.kicking_xpmade) * int(scoring_config['kicking']['made-PAT'])
+            scores[players[p]] += int(pp.kicking_xpmade) * int(scoring_config['kicking']['made-PAT'])
+            scores[players[p]] += int(pp.kicking_xpmissed) * int(scoring_config['kicking']['missed-PAT'])
+
 
             # Points from miscellaneous
             scores[players[p]] += int(pp.fumbles_rec_tds) * int(scoring_config['miscellaneous']['fr-td'])
