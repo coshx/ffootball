@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css?family=Fira+Sans:300,400" rel="stylesheet">
 </head>
 <body>
 
@@ -42,7 +43,7 @@
   }
 
   $(document).ready(function() {
-    $("button").click(function(e) {
+    $(".submit").click(function(e) {
       e.preventDefault();
       $.ajax({
         type: "POST",
@@ -62,369 +63,313 @@
   });
 </script>
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-7 custom-rules custom-rules">
-      <h3 class="table-title">Custom League Rules</h3>
-      <form class="form-horizontal custom-rules">
-        <div class="passing">
-          <h4 class="subtitle">Passing</h4>
-          <div class="form-group">
-            <label for="25PY" class="col-md-7 control-label">
-              1pt for every
-              <select class="dropdown" id="25PY">
-                <option>10</option>
-                <option>15</option>
-                <option>20</option>
-                <option selected>25</option>
-                <option>30</option>
-                <option>35</option>
-              </select>
-              passing yards
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="TD-pass" class="col-md-7 control-label">
-              <select class="dropdown" id="TD-Pass">
-                <option>3</option>
-                <option selected>4</option>
-                <option>5</option>
-                <option>6</option>
-                <option>7</option>
-              </select>
-              points for every TD pass
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="interception-thrown" class="col-md-7 control-label">
-              <select class="dropdown" id="interception-thrown">
-                <option>-1</option>
-                <option selected>-2</option>
-                <option>-3</option>
-                <option>-4</option>
-                <option>-5</option>
-              </select>
-              point(s) for every interception thrown
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="2pt-thrown" class="col-md-7 control-label">
-              <select class="dropdown" id="2pt-thrown">
-                <option>1</option>
-                <option selected>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
-              point(s) for every 2pt conversion thrown
-            </label>
-          </div>
-        </div>
-        <div class="rushing">
-          <h4 class="subtitle">Rushing</h4>
-          <div class="form-group">
-            <label for="10RY" class="col-md-7 control-label">
-              1pt for every
-              <select class="dropdown" id="10RY">
-                <option selected>10</option>
-                <option>15</option>
-                <option>20</option>
-                <option>25</option>
-                <option>30</option>
-                <option>35</option>
-              </select>
-              rushing yards
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="TD-rush" class="col-md-7 control-label">
-              <select class="dropdown" id="TD-rush">
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                <option selected>6</option>
-                <option>7</option>
-              </select>
-              points for every rushing TD
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="2pt-rush" class="col-md-7 control-label">
-              <select class="dropdown" id="2pt-rush">
-                <option>1</option>
-                <option selected>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
-              point(s) for every 2pt conversion by RB
-            </label>
-          </div>
-        </div>
-        <div class="receiving">
-          <h4 class="subtitle">Receiving</h4>
-          <div class="form-group">
-            <label for="10RecY" class="col-md-7 control-label">
-              1pt for every
-              <select class="dropdown" id="10RecY">
-                <option selected>10</option>
-                <option>15</option>
-                <option>20</option>
-                <option>25</option>
-                <option>30</option>
-                <option>35</option>
-              </select>
-              receiving yards
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="TD-rush" class="col-md-7 control-label">
-              <select class="dropdown" id="TD-rush">
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                <option selected>6</option>
-                <option>7</option>
-              </select>
-              points for every receiving TD
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="2pt-rush" class="col-md-7 control-label">
-              <select class="dropdown" id="2pt-rush">
-                <option>1</option>
-                <option selected>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
-              point(s) for every 2pt conversion by WR
-            </label>
-          </div>
-        </div>
-        <div class="miscellaneous">
-          <h4 class="subtitle">Miscellaneous</h4>
-          <div class="form-group">
-            <label for="kickoff-td" class="col-md-7 control-label">
-              <select class="dropdown" id="kickoff-td">
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                <option selected>6</option>
-                <option>7</option>
-                <option>8</option>
-              </select>
-              points for a kick off returned for TD
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="punt-td" class="col-md-7 control-label">
-              <select class="dropdown" id="punt-td">
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                <option selected>6</option>
-                <option>7</option>
-                <option>8</option>
-              </select>
-              points for a punt returned for TD
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="fr-td" class="col-md-7 control-label">
-              <select class="dropdown" id="fr-td">
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                <option selected>6</option>
-                <option>7</option>
-                <option>8</option>
-              </select>
-              points for a fumble recovered for TD
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="fumble" class="col-md-7 control-label">
-              <select class="dropdown" id="fumble">
-                <option>-1</option>
-                <option selected>-2</option>
-                <option>-3</option>
-                <option>-4</option>
-                <option>-5</option>
-              </select>
-              point(s) for every fumble lost
-            </label>
-          </div>
-        </div>
-        <div class="kicking">
-          <h4 class="subtitle">Kicking</h4>
-          <div class="form-group">
-            <label for="made-PAT" class="col-md-7 control-label">
-              <select class="dropdown" id="made-PAT">
-                <option selected>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
-              point(s) for every made PAT
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="missed-PAT" class="col-md-7 control-label">
-              <select class="dropdown" id="missed-PAT">
-                <option selected>-1</option>
-                <option>-2</option>
-                <option>-3</option>
-                <option>-4</option>
-                <option>-5</option>
-              </select>
-              point(s) for every missed FG/PAT
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="fg-39" class="col-md-7 control-label">
-              <select class="dropdown" id="fg-39">
-                <option>1</option>
-                <option>2</option>
-                <option selected>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
-              point(s) for every made FG (0-39 yards)
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="fg-49" class="col-md-7 control-label">
-              <select class="dropdown" id="fg-49">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option selected>4</option>
-                <option>5</option>
-              </select>
-              point(s) for every made FG (40-49 yards)
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="fg-50" class="col-md-7 control-label">
-              <select class="dropdown" id="fg-50">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option selected>5</option>
-              </select>
-              point(s) for every made FG (40-49 yards)
-            </label>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="col-md-7">
-            <button type="submit" class="btn btn-default">Submit</button>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="col-md-1">
-    </div>
-    <div class="col-md-4 standard-rules">
-      <h3 class="table-title">ESPN Standard League Rules</h3>
-      <table class="table">
-        <tr>
-          <th class="subtitle">Passing</th>
-        </tr>
-        <tr>
-          <td>Every 25 Passing Yards</td>
-          <td class="score">1</td>
-        </tr>
-        <tr>
-          <td>TD Pass</td>
-          <td class="score">4</td>
-        </tr>
-        <tr>
-          <td>Interception Thrown</td>
-          <td class="score">-2</td>
-        </tr>
-        <tr>
-          <td>2pt Conversion</td>
-          <td class="score">2</td>
-        </tr>
-        <tr>
-          <th class="subtitle">Rushing</th>
-        </tr>
-        <tr>
-          <td>Every 10 Rushing Yards</td>
-          <td class="score">1</td>
-        </tr>
-        <tr>
-          <td>TD Rush</td>
-          <td class="score">6</td>
-        </tr>
-        <tr>
-          <td>2pt Conversion</td>
-          <td class="score">2</td>
-        </tr>
-        <tr>
-          <th class="subtitle">Receiving</th>
-        </tr>
-        <tr>
-          <td>Every 10 Rushing Yards</td>
-          <td class="score">1</td>
-        </tr>
-        <tr>
-          <td>TD Rush</td>
-          <td class="score">6</td>
-        </tr>
-        <tr>
-          <td>2pt Conversion</td>
-          <td class="score">2</td>
-        </tr>
-        <tr>
-          <th class="subtitle">Miscellaneous</th>
-        </tr>
-        <tr>
-          <td>Kick Off Return TD</td>
-          <td class="score">6</td>
-        </tr>
-        <tr>
-          <td>Punt Return TD</td>
-          <td class="score">6</td>
-        </tr>
-        <tr>
-          <td>Fumble Recovered for TD</td>
-          <td class="score">6</td>
-        </tr>
-        <tr>
-          <td>Fumble Lost</td>
-          <td class="score">-2</td>
-        </tr>
-        <tr>
-          <th class="subtitle">Kicking</th>
-        </tr>
-        <tr>
-          <td>Each PAT Made</td>
-          <td class="score">1</td>
-        </tr>
-        <tr>
-          <td>Total FG Missed</td>
-          <td class="score">-1</td>
-        </tr>
-        <tr>
-          <td>FG Made (0-39 yards)</td>
-          <td class="score">3</td>
-        </tr>
-        <tr>
-          <td>FG Made (40-49 yards)</td>
-          <td class="score">4</td>
-        </tr>
-        <tr>
-          <td>FG Made (50+ yards)</td>
-          <td class="score">5</td>
-        </tr>
-      </table>
-    </div>
-  </div>
+<div class="header">
+  <img class="logo" src="./images/logo.png">
 </div>
+
+<div class="row">
+  <div class="col-md-2 side"></div>
+  <div class="col-md-8">
+    <div class="subheader-container">
+      <img class="helmet" src="./images/players.png">
+      <p class="helmet-text">Players</p>
+      <button class="btn btn-default rules-button" data-toggle="modal" data-target=".bs-example-modal-lg">
+        <img class="rule-button-image" src="./images/custom.png">Custom Rules
+      </button>
+      <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3>Rules</h3>
+            </div>
+            <form class="form-horizontal custom-rules">
+              <div class="passing">
+                <h4 class="subtitle">Passing</h4>
+                <hr>
+                <div class="form-group passing-group">
+                  <label for="25PY" class="control-label">
+                    For Every
+                    <select class="dropdown" id="25PY">
+                      <option>10</option>
+                      <option>15</option>
+                      <option>20</option>
+                      <option selected>25</option>
+                      <option>30</option>
+                      <option>35</option>
+                    </select>
+                    Passing Yards
+                    <p class="passing-yards-pt">1pt(s)</p>
+                  </label>
+                </div>
+                <div class="form-group passing-group">
+                  <label for="TD-pass" class="control-label">
+                    TD pass
+                    <select class="dropdown" id="TD-Pass">
+                      <option>3</option>
+                      <option selected>4</option>
+                      <option>5</option>
+                      <option>6</option>
+                      <option>7</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+                <div class="form-group passing-group">
+                  <label for="interception-thrown" class="control-label">
+                    Interception Thrown
+                    <select class="dropdown" id="interception-thrown">
+                      <option>-1</option>
+                      <option selected>-2</option>
+                      <option>-3</option>
+                      <option>-4</option>
+                      <option>-5</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+                <div class="form-group passing-group">
+                  <label for="2pt-thrown" class="control-label">
+                    2pt Conversion
+                    <select class="dropdown" id="2pt-thrown">
+                      <option>1</option>
+                      <option selected>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+              </div>
+              <div class="miscellaneous">
+                <h4 class="subtitle">Miscellaneous</h4>
+                <hr>
+                <div class="form-group misc-group">
+                  <label for="kickoff-td" class="control-label">
+                    Kick Off Return TD
+                    <select class="dropdown" id="kickoff-td">
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                      <option selected>6</option>
+                      <option>7</option>
+                      <option>8</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+                <div class="form-group misc-group">
+                  <label for="punt-td" class="control-label">
+                    Punt Return TD
+                    <select class="dropdown" id="punt-td">
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                      <option selected>6</option>
+                      <option>7</option>
+                      <option>8</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+                <div class="form-group misc-group">
+                  <label for="fr-td" class="control-label">
+                    Fumble Recoverd For TD
+                    <select class="dropdown" id="fr-td">
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                      <option selected>6</option>
+                      <option>7</option>
+                      <option>8</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+                <div class="form-group misc-group">
+                  <label for="fumble" class="control-label">
+                    Fumble Lost
+                    <select class="dropdown" id="fumble">
+                      <option>-1</option>
+                      <option selected>-2</option>
+                      <option>-3</option>
+                      <option>-4</option>
+                      <option>-5</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+              </div>
+              <div class="kicking">
+                <h4 class="subtitle">Kicking</h4>
+                <div class="form-group kicking-group">
+                  <label for="made-PAT" class="control-label">
+                    Each PAT Made
+                    <select class="dropdown" id="made-PAT">
+                      <option selected>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+                <div class="form-group kicking-group">
+                  <label for="missed-PAT" class="control-label">
+                    Each FG Missed
+                    <select class="dropdown" id="missed-PAT">
+                      <option selected>-1</option>
+                      <option>-2</option>
+                      <option>-3</option>
+                      <option>-4</option>
+                      <option>-5</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+                <div class="form-group kicking-group">
+                  <label for="fg-39" class="control-label">
+                    FG Made (0-39 yards)
+                    <select class="dropdown" id="fg-39">
+                      <option>1</option>
+                      <option>2</option>
+                      <option selected>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+                <div class="form-group kicking-group">
+                  <label for="fg-49" class="control-label">
+                    FG Made (40-49 yards)
+                    <select class="dropdown" id="fg-49">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option selected>4</option>
+                      <option>5</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+                <div class="form-group kicking-group">
+                  <label for="fg-50" class="control-label">
+                    FG Made (50+ yards)
+                    <select class="dropdown" id="fg-50">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option selected>5</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+              </div>
+              <div class="receiving">
+                <h4 class="subtitle">Receiving</h4>
+                <hr>
+                <div class="form-group rec-group">
+                  <label for="10RecY" class="control-label">
+                    Every
+                    <select class="dropdown" id="10RecY">
+                      <option selected>10</option>
+                      <option>15</option>
+                      <option>20</option>
+                      <option>25</option>
+                      <option>30</option>
+                      <option>35</option>
+                    </select>
+                    Receiving Yards 1pt
+                  </label>
+                </div>
+                <div class="form-group rec-group">
+                  <label for="TD-rec" class="control-label">
+                    TD Receiving
+                    <select class="dropdown" id="TD-rec">
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                      <option selected>6</option>
+                      <option>7</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+                <div class="form-group rec-group">
+                  <label for="2pt-rec" class="control-label">
+                    2pt Conversion
+                    <select class="dropdown" id="2pt-rec">
+                      <option>1</option>
+                      <option selected>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+              </div>
+              <div class="rushing">
+                <h4 class="subtitle">Rushing</h4>
+                <hr>
+                <div class="form-group rushing-group">
+                  <label for="10RY" class="control-label">
+                    Every
+                    <select class="dropdown" id="10RY">
+                      <option selected>10</option>
+                      <option>15</option>
+                      <option>20</option>
+                      <option>25</option>
+                      <option>30</option>
+                      <option>35</option>
+                    </select>
+                    Rushing Yards 1pt
+                  </label>
+                </div>
+                <div class="form-group rushing-group">
+                  <label for="TD-rush" class="control-label">
+                    TD Rush
+                    <select class="dropdown" id="TD-rush">
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                      <option selected>6</option>
+                      <option>7</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+                <div class="form-group rushing-group">
+                  <label for="2pt-rush" class="control-label">
+                    2pt Conversion
+                    <select class="dropdown" id="2pt-rush">
+                      <option>1</option>
+                      <option selected>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </select>
+                    pts
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-7">
+                  <button type="submit" class="btn btn-default submit">Apply</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="header-sep">
+  </div>
+  <div class="col-md-2 side"></div>
+</div>
+
 </body>
 </html>
