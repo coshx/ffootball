@@ -48,6 +48,7 @@
           data: JSON.stringify(submitForm()),
           success: function(msg) {
             console.log('Posting data succeeded.')
+            console.log('submitForm() sent over', submitForm())
           },
           error: function() {
             console.log('Posting data failed.')
@@ -58,7 +59,6 @@
   });
 </script>
 
-<input type="button" value="Log Form Values" onclick="return logForm();">
 <div class="container">
   <div class="row">
     <div class="col-md-7 custom-rules custom-rules">
