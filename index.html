@@ -43,6 +43,22 @@
   }
 
   $(document).ready(function() {
+    //  fxn runs on page load to fetch std rules data
+    $.ajax({
+        type: "POST",
+          url: "http://localhost:8000",
+          data: JSON.stringify(submitForm()),
+          success: function(response) {
+            console.log('Posting data succeeded.');
+            console.log('submitForm() sent over', submitForm());
+            player_data = response;
+          },
+          error: function() {
+            console.log('Posting data failed.')
+            console.log('submitForm() sent over', submitForm())
+          }
+      });
+
     $(".submit").click(function(e) {
       e.preventDefault();
       $.ajax({
@@ -367,6 +383,11 @@
       </div>
     </div>
     <hr class="header-sep">
+
+    <!-- handle all of the returned player data below -->
+    <table class="table table-hover">
+      <tr>
+    </table>
   </div>
   <div class="col-md-2 side"></div>
 </div>
