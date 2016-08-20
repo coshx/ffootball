@@ -1,4 +1,6 @@
 ## Getting Started
+### Serve up the Frontend
+
 ### Setup the Backend Data Service
 
 1. Clone this repo using `git clone https://github.com/coshx/ffootball.git`.
