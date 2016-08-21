@@ -33,12 +33,14 @@ class MainHandler(tornado.web.RequestHandler):
 
     @tornado.web.asynchronous
     def post(self):
-        """Respond to POST requests with optimal allocations."""
-        data = json.loads(self.request.body.decode('utf-8'))
-        print data
-        scores = querydb.get_scores(data)
+        """Respond to POST requests with scores."""
+        scoring_config = json.loads(self.request.body.decode('utf-8'))
+        print scoring_config
+        # TODO: Get the timeframe from the POST request
+        scores = querydb.get_scores(scoring_config, 2015)
         self.write(scores)
         self.finish()
+
 
 class OnloadHandler(tornado.web.RequestHandler):
     """Handles post requests by responding with a JSON file."""
@@ -52,7 +54,7 @@ class OnloadHandler(tornado.web.RequestHandler):
 
     @tornado.web.asynchronous
     def get(self):
-        """Respond to GET requests for debugging purposes."""
+        """Respond to GET requests with JSON file."""
         scores = []
         with open('scores.json') as f:
             scores = json.load(f)
@@ -61,7 +63,7 @@ class OnloadHandler(tornado.web.RequestHandler):
 
     @tornado.web.asynchronous
     def post(self):
-        """Respond to POST requests with optimal allocations."""
+        """Respond to POST requests with JSON file."""
         scores = []
         with open('scores.json') as f:
             scores = json.load(f)
@@ -75,21 +77,6 @@ def make_app():
         (r"/", MainHandler),
         (r"/onload", OnloadHandler)
     ])
-
-
-def dict_from_data(data):
-    """Maps data from POST request to a Python dictionary"""
-    output = {}
-    data = dict(data)
-    mapping = {"startDate": "start_date",
-               "endDate": "end_date",
-               "initialInvestment": "principle"}
-    for k, v in data.items():
-        if k in mapping:
-            output[mapping[k]] = v
-        else:
-            output[k] = v
-    return output
 
 
 def main():
