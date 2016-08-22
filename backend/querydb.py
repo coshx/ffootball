@@ -34,15 +34,15 @@ def get_players_by_position(position, years):
 
 
 def get_player_detail_stats(player_id, years):
-    """Returns a dictionary of {player_id: {stat: value}}"""
+    """Returns a dictionary of {stat: value, ...} over a year."""
     player = {}
 
     db = nfldb.connect()
     q = nfldb.Query(db)
     q.game(season_year=years, season_type='Regular').player(player_id=player_id)
-    for p in q.as_aggregate():
-        player[player_id] = p
-    return player
+    ## Odd for loop. Returns immediately b/c 1 player per id.
+    for stats in q.as_aggregate():
+        return stats
 
 
 def score_players(scoring_config, position, years):
@@ -57,35 +57,38 @@ def score_players(scoring_config, position, years):
 
     # Passing, Rushing, Receiving
     for p in players:
-        q = nfldb.Query(db).game(season_year=years, season_type='Regular')
-        for pp in q.play_player(player_id=p).as_aggregate():
+        stats = get_player_detail_stats(p, years)
+        print '\n', stats, '\n'
+        try:
             # Points from passing
-            scores[players[p]] += int(pp.passing_yds) / int(scoring_config['passing']['25PY'])
-            scores[players[p]] += int(pp.passing_tds) * int(scoring_config['passing']['TD-pass'])
-            scores[players[p]] += int(pp.passing_twoptm) * int(scoring_config['passing']['2pt-thrown'])
-            scores[players[p]] += int(pp.passing_int) * int(scoring_config['passing']['interception-thrown'])
+            scores[players[p]] += int(stats.passing_yds) / int(scoring_config['passing']['25PY'])
+            scores[players[p]] += int(stats.passing_tds) * int(scoring_config['passing']['TD-pass'])
+            scores[players[p]] += int(stats.passing_twoptm) * int(scoring_config['passing']['2pt-thrown'])
+            scores[players[p]] += int(stats.passing_int) * int(scoring_config['passing']['interception-thrown'])
 
             # Points from rushing
-            scores[players[p]] += int(pp.rushing_yds) / int(scoring_config['rushing']['10RY'])
-            scores[players[p]] += int(pp.rushing_tds) * int(scoring_config['rushing']['TD-rush'])
-            scores[players[p]] += int(pp.rushing_twoptm) * int(scoring_config['rushing']['2pt-rush'])
+            scores[players[p]] += int(stats.rushing_yds) / int(scoring_config['rushing']['10RY'])
+            scores[players[p]] += int(stats.rushing_tds) * int(scoring_config['rushing']['TD-rush'])
+            scores[players[p]] += int(stats.rushing_twoptm) * int(scoring_config['rushing']['2pt-rush'])
 
             # Points from receiving
-            scores[players[p]] += int(pp.receiving_yds) / int(scoring_config['receiving']['10RecY'])
-            scores[players[p]] += int(pp.receiving_tds) * int(scoring_config['receiving']['TD-rec'])
-            scores[players[p]] += int(pp.receiving_twoptm) * int(scoring_config['receiving']['2pt-rec'])
+            scores[players[p]] += int(stats.receiving_yds) / int(scoring_config['receiving']['10RecY'])
+            scores[players[p]] += int(stats.receiving_tds) * int(scoring_config['receiving']['TD-rec'])
+            scores[players[p]] += int(stats.receiving_twoptm) * int(scoring_config['receiving']['2pt-rec'])
 
             # Points from miscellaneous
-            scores[players[p]] += int(pp.fumbles_rec_tds) * int(scoring_config['miscellaneous']['fr-td'])
-            scores[players[p]] += int(pp.kickret_tds) * int(scoring_config['miscellaneous']['kickoff-td'])
-            scores[players[p]] += int(pp.fumbles_lost) * int(scoring_config['miscellaneous']['fumble'])
-            scores[players[p]] += int(pp.puntret_tds) * int(scoring_config['miscellaneous']['punt-td'])
+            scores[players[p]] += int(stats.fumbles_rec_tds) * int(scoring_config['miscellaneous']['fr-td'])
+            scores[players[p]] += int(stats.kickret_tds) * int(scoring_config['miscellaneous']['kickoff-td'])
+            scores[players[p]] += int(stats.fumbles_lost) * int(scoring_config['miscellaneous']['fumble'])
+            scores[players[p]] += int(stats.puntret_tds) * int(scoring_config['miscellaneous']['punt-td'])
             # Points from kicking
-            # scores[players[p]] += int(pp.kicking_xpmade) * int(scoring_config['kicking']['made-PAT'])
-            # scores[players[p]] += int(pp.kicking_xpmissed) * int(scoring_config['kicking']['missed-PAT'])
-            # scores[players[p]] += int(pp.kicking_fgm_yds) * int(scoring_config['kicking']['fg-39'])
-            # scores[players[p]] += int(pp.kicking_fgm_yds) * int(scoring_config['kicking']['fg-49'])
-            # scores[players[p]] += int(pp.kicking_fgm_yds) * int(scoring_config['kicking']['fg-50']
+            # scores[players[p]] += int(stats.kicking_xpmade) * int(scoring_config['kicking']['made-PAT'])
+            # scores[players[p]] += int(stats.kicking_xpmissed) * int(scoring_config['kicking']['missed-PAT'])
+            # scores[players[p]] += int(stats.kicking_fgm_yds) * int(scoring_config['kicking']['fg-39'])
+            # scores[players[p]] += int(stats.kicking_fgm_yds) * int(scoring_config['kicking']['fg-49'])
+            # scores[players[p]] += int(stats.kicking_fgm_yds) * int(scoring_config['kicking']['fg-50']
+        except:
+            continue
     return scores
 
 
