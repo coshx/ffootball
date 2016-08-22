@@ -14,7 +14,6 @@ def get_scores(scoring_config, years):
     score['rushing'] = score_players(scoring_config, 'RB', years)
     score['receiving'] = score_players(scoring_config, 'WR', years)
     score['kicking'] = score_players(scoring_config, 'K', years)
-    print score['passing']
     with open('scores.json', 'w') as fp:
         json.dump(score, fp)
 
@@ -35,8 +34,6 @@ def get_players_by_position(position, years):
 
 def get_player_detail_stats(player_id, years):
     """Returns a dictionary of {stat: value, ...} over a year."""
-    player = {}
-
     db = nfldb.connect()
     q = nfldb.Query(db)
     q.game(season_year=years, season_type='Regular').player(player_id=player_id)
@@ -58,7 +55,6 @@ def score_players(scoring_config, position, years):
     # Passing, Rushing, Receiving
     for p in players:
         stats = get_player_detail_stats(p, years)
-        print '\n', stats, '\n'
         try:
             # Points from passing
             scores[players[p]] += int(stats.passing_yds) / int(scoring_config['passing']['25PY'])
@@ -82,14 +78,41 @@ def score_players(scoring_config, position, years):
             scores[players[p]] += int(stats.fumbles_lost) * int(scoring_config['miscellaneous']['fumble'])
             scores[players[p]] += int(stats.puntret_tds) * int(scoring_config['miscellaneous']['punt-td'])
             # Points from kicking
-            # scores[players[p]] += int(stats.kicking_xpmade) * int(scoring_config['kicking']['made-PAT'])
-            # scores[players[p]] += int(stats.kicking_xpmissed) * int(scoring_config['kicking']['missed-PAT'])
-            # scores[players[p]] += int(stats.kicking_fgm_yds) * int(scoring_config['kicking']['fg-39'])
-            # scores[players[p]] += int(stats.kicking_fgm_yds) * int(scoring_config['kicking']['fg-49'])
-            # scores[players[p]] += int(stats.kicking_fgm_yds) * int(scoring_config['kicking']['fg-50']
+            scores[players[p]] += int(stats.kicking_xpmade) * int(scoring_config['kicking']['made-PAT'])
+            scores[players[p]] += int(stats.kicking_xpmissed) * int(scoring_config['kicking']['missed-PAT'])
+            scores[players[p]] += score_fg_39(p, years) * int(scoring_config['kicking']['fg-39'])
+            scores[players[p]] += score_fg_49(p, years) * int(scoring_config['kicking']['fg-49'])
+            scores[players[p]] += score_fg_50(p, years) * int(scoring_config['kicking']['fg-50'])
         except:
             continue
     return scores
+
+
+def score_fg_39(player_id, years):
+    """Returns number of field goals under 40 yards."""
+    db = nfldb.connect()
+    q = nfldb.Query(db)
+
+    q.game(season_year=2015, season_type='Regular')
+    return len([pp for pp in q.player(player_id=player_id).play_player(kicking_fgm_yds__lt=40).as_plays()])
+
+
+def score_fg_49(player_id, years):
+    """Returns number of field goals gte 40 yards and lt 50 yards."""
+    db = nfldb.connect()
+    q = nfldb.Query(db)
+
+    q.game(season_year=2015, season_type='Regular')
+    return len([pp for pp in q.player(player_id=player_id).play_player(kicking_fgm_yds__gte=40, kicking_fgm_yds__lt=50).as_plays()])
+
+
+def score_fg_50(player_id, years):
+    """Returns number of field goals gte 50 yards."""
+    db = nfldb.connect()
+    q = nfldb.Query(db)
+
+    q.game(season_year=2015, season_type='Regular')
+    return len([pp for pp in q.player(player_id=player_id).play_player(kicking_fgm_yds__gte=50).as_plays()])
 
 
 if __name__ == "__main__":
